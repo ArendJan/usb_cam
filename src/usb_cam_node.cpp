@@ -436,6 +436,15 @@ void UsbCamNode::update()
     if (!isSuccessful) {
       RCLCPP_WARN_ONCE(this->get_logger(), "USB camera did not respond in time.");
     }
+    if(m_image_publisher->getNumSubscribers() == 0) {
+      m_camera->stop_capturing();
+      RCLCPP_WARN(this->get_logger(), "No subscribers, stopping camera.");
+    }
+  } else {
+    if(m_image_publisher->getNumSubscribers() > 0) {
+      m_camera->start_capturing();
+      RCLCPP_INFO(this->get_logger(), "Starting camera.");
+    }
   }
 }
 }  // namespace usb_cam
